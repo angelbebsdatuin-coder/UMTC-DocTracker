@@ -1,0 +1,325 @@
+
+{% extends "base.html" %}
+
+{% block navigation %}
+    <a href="{{ url_for('guest') }}">Guest Home</a>
+    <a href="{{ url_for('request_document') }}">Request Document</a>
+    <a href="{{ url_for('login') }}">Student Login</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="guest-container">
+
+    <div class="guest-header">
+        <h1>UMTC DocuTrack</h1>
+        <h2>Document Request Portal</h2>
+        <p>University of Mindanao - Tagum College</p>
+    </div>
+
+    <div class="guest-notice">
+        <strong>Guest Information</strong>
+        <p>Please provide your information to begin your document request.</p>
+        <p>Students must use their official UM email address to access their student account.</p>
+    </div>
+
+    <div class="guest-form-card">
+        <h2>Document Request Information</h2>
+
+        <form method="POST" action="{{ url_for('request_document') }}">
+
+            <div class="form-section">
+                <h3>Personal Information</h3>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>First Name *</label>
+                        <input type="text" name="first_name"
+                               value="{{ request.form.get('first_name', '') }}"
+                               required>
+                        {% if errors and errors.get('first_name') %}
+                            <small class="error">{{ errors.first_name }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Last Name *</label>
+                        <input type="text" name="last_name"
+                               value="{{ request.form.get('last_name', '') }}"
+                               required>
+                        {% if errors and errors.get('last_name') %}
+                            <small class="error">{{ errors.last_name }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Official UM Email *</label>
+                        <input type="email" name="email"
+                               placeholder="example.123456.tc@umindanao.edu.ph"
+                               value="{{ request.form.get('email', '') }}"
+                               required>
+                        {% if errors and errors.get('email') %}
+                            <small class="error">{{ errors.email }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact Number *</label>
+                        <input type="tel" name="contact_number"
+                               placeholder="09XXXXXXXXX"
+                               value="{{ request.form.get('contact_number', '') }}"
+                               required>
+                        {% if errors and errors.get('contact_number') %}
+                            <small class="error">{{ errors.contact_number }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Student ID *</label>
+                        <input type="text" name="student_id"
+                               value="{{ request.form.get('student_id', '') }}"
+                               required>
+                        {% if errors and errors.get('student_id') %}
+                            <small class="error">{{ errors.student_id }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Course / Program *</label>
+                        <input type="text" name="course"
+                               value="{{ request.form.get('course', '') }}"
+                               required>
+                        {% if errors and errors.get('course') %}
+                            <small class="error">{{ errors.course }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Document Information</h3>
+
+                <div class="form-group">
+                    <label>Document Type *</label>
+                    <select name="document_type" required>
+                        <option value="">Select Document</option>
+                        <option value="Transcript of Records">Transcript of Records</option>
+                        <option value="Certificate of Enrollment">Certificate of Enrollment</option>
+                        <option value="Certificate of Grades">Certificate of Grades</option>
+                        <option value="Good Moral Certificate">Good Moral Certificate</option>
+                        <option value="Honorable Dismissal">Honorable Dismissal</option>
+                        <option value="Certificate of Graduation">Certificate of Graduation</option>
+                        <option value="Other Documents">Other Documents</option>
+                    </select>
+                    {% if errors and errors.get('document_type') %}
+                        <small class="error">{{ errors.document_type }}</small>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label>Purpose of Request *</label>
+                    <textarea name="purpose" rows="4" required>{{ request.form.get('purpose', '') }}</textarea>
+                    {% if errors and errors.get('purpose') %}
+                        <small class="error">{{ errors.purpose }}</small>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Remarks</label>
+                    <textarea name="remarks" rows="3">{{ request.form.get('remarks', '') }}</textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Payment Information</h3>
+
+                <div class="form-group">
+                    <label>Payment Method *</label>
+                    <select name="payment_method" required>
+                        <option value="">Select Payment Method</option>
+                        <option value="GCash">GCash</option>
+                        <option value="Cash">Cash at Registrar</option>
+                    </select>
+                    {% if errors and errors.get('payment_method') %}
+                        <small class="error">{{ errors.payment_method }}</small>
+                    {% endif %}
+                </div>
+
+                <div class="payment-notice">
+                    <strong>Payment Reminder</strong>
+                    <p>Wait for the Registrar's instructions regarding the document fee and payment verification.</p>
+                    <p>Submitting this form does not automatically confirm payment.</p>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="reset" class="clear-button">Clear Form</button>
+                <button type="submit" class="submit-button">Submit Request</button>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="guest-footer">
+        UMTC DocuTrack | University of Mindanao - Tagum College
+    </div>
+
+</div>
+
+<style>
+.guest-container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 25px;
+    color: #333;
+}
+
+.guest-header {
+    background: linear-gradient(135deg, #701b2d, #40101d);
+    color: white;
+    padding: 35px 20px;
+    text-align: center;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+.guest-header h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.guest-header h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.guest-notice, .payment-notice {
+    background: #f8eeee;
+    border-left: 5px solid #701b2d;
+    padding: 18px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.guest-notice strong, .payment-notice strong {
+    color: #701b2d;
+}
+
+.guest-form-card {
+    background: white;
+    padding: 28px;
+    border-radius: 12px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.07);
+}
+
+.guest-form-card h2 {
+    color: #701b2d;
+    margin-bottom: 25px;
+}
+
+.form-section {
+    border-bottom: 1px solid #eee;
+    padding: 20px 0;
+}
+
+.form-section h3 {
+    color: #701b2d;
+    margin-bottom: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #701b2d;
+}
+
+.error {
+    color: #c62828;
+    margin-top: 6px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.clear-button, .submit-button {
+    padding: 13px 22px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.clear-button {
+    background: #eee;
+    color: #333;
+}
+
+.submit-button {
+    background: #701b2d;
+    color: white;
+}
+
+.submit-button:hover {
+    background: #50101f;
+}
+
+.guest-footer {
+    text-align: center;
+    color: #777;
+    margin-top: 25px;
+    font-size: 13px;
+}
+
+@media(max-width: 650px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .guest-container {
+        padding: 12px;
+    }
+
+    .guest-form-card {
+        padding: 18px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}
+</style>
+
+{% endblock %}

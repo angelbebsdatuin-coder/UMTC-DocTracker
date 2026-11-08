@@ -1,0 +1,15 @@
+
+{% extends "base.html" %}
+
+{% block navigation %}
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('admin_requests') }}">Requests</a>
+    <a href="{{ url_for('admin_queue') }}">Overall Queue</a>
+    <a href="{{ url_for('assessment') }}">Assessment</a>
+    <a href="{{ url_for('logs') }}">Activity Logs</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+{% endblock %}
+
+{% block content %}
+    {{ body|safe }}
+{% endblock %}

@@ -1,0 +1,283 @@
+
+{% extends "base.html" %}
+
+{% block navigation %}
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('request_document') }}">Request Document</a>
+    <a href="{{ url_for('notifications') }}">Notifications</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="student-dashboard">
+
+    <div class="dashboard-header">
+        <div>
+            <h1>Student Dashboard</h1>
+            <p>Welcome to UMTC DocuTrack</p>
+        </div>
+        <div class="student-account">
+            <span>Logged in as</span>
+            <strong>{{ session.get('email', 'Student') }}</strong>
+        </div>
+    </div>
+
+    <div class="dashboard-section">
+        <h2>My Request Status</h2>
+        <p>Monitor your document requests and queue position.</p>
+
+        {% if requests %}
+            <div class="request-grid">
+                {% for request in requests %}
+                    <div class="request-card">
+
+                        <div class="request-card-header">
+                            <h3>{{ request.document_type }}</h3>
+                            <span class="status-badge">
+                                {{ request.status }}
+                            </span>
+                        </div>
+
+                        <div class="request-details">
+                            <p>
+                                <strong>Request ID:</strong>
+                                {{ request.id }}
+                            </p>
+
+                            <p>
+                                <strong>Request Date:</strong>
+                                {{ request.request_date }}
+                            </p>
+
+                            <p>
+                                <strong>Queue Position:</strong>
+                                <span class="queue-number">
+                                    {% if request.queue_position %}
+                                        #{{ request.queue_position }}
+                                    {% else %}
+                                        Not assigned
+                                    {% endif %}
+                                </span>
+                            </p>
+
+                            <p>
+                                <strong>Payment Status:</strong>
+                                {{ request.payment_status or 'Pending' }}
+                            </p>
+                        </div>
+
+                        <div class="request-progress">
+                            {% set status = request.status|lower %}
+
+                            {% if status == 'completed' or status == 'released' %}
+                                <div class="progress-bar completed"></div>
+                            {% elif status == 'processing' %}
+                                <div class="progress-bar processing"></div>
+                            {% elif status == 'approved' %}
+                                <div class="progress-bar approved"></div>
+                            {% else %}
+                                <div class="progress-bar pending"></div>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <div class="empty-state">
+                <h3>No Document Requests Yet</h3>
+                <p>You haven't submitted any document requests.</p>
+                <a href="{{ url_for('request_document') }}" class="primary-button">
+                    Request a Document
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="dashboard-footer">
+        <p>University of Mindanao – Tagum College</p>
+        <span>UMTC DocuTrack | Student Portal</span>
+    </div>
+
+</div>
+
+<style>
+.student-dashboard {
+    padding: 25px;
+    color: #333;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+    color: #701b2d;
+    margin-bottom: 5px;
+}
+
+.dashboard-header p {
+    color: #777;
+}
+
+.student-account {
+    background: #f8eeee;
+    padding: 15px 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.student-account strong {
+    color: #701b2d;
+}
+
+.dashboard-section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+}
+
+.dashboard-section h2 {
+    color: #701b2d;
+    margin-bottom: 5px;
+}
+
+.request-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.request-card {
+    border: 1px solid #eee;
+    border-left: 5px solid #701b2d;
+    border-radius: 10px;
+    padding: 20px;
+    background: #fff;
+}
+
+.request-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.request-card-header h3 {
+    color: #701b2d;
+    font-size: 17px;
+}
+
+.status-badge {
+    background: #f5e5e8;
+    color: #701b2d;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.request-details p {
+    margin: 12px 0;
+    font-size: 14px;
+}
+
+.queue-number {
+    color: #701b2d;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.request-progress {
+    height: 7px;
+    background: #eee;
+    border-radius: 10px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 10px;
+}
+
+.progress-bar.pending {
+    width: 25%;
+    background: #d6a84b;
+}
+
+.progress-bar.approved {
+    width: 50%;
+    background: #8c6bb1;
+}
+
+.progress-bar.processing {
+    width: 75%;
+    background: #2877b8;
+}
+
+.progress-bar.completed {
+    width: 100%;
+    background: #27834c;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 45px 20px;
+}
+
+.empty-state h3 {
+    color: #701b2d;
+    margin-bottom: 10px;
+}
+
+.primary-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 22px;
+    background: #701b2d;
+    color: white;
+    text-decoration: none;
+    border-radius: 7px;
+}
+
+.primary-button:hover {
+    background: #50101f;
+}
+
+.dashboard-footer {
+    text-align: center;
+    margin-top: 30px;
+    color: #777;
+    font-size: 13px;
+}
+
+@media (max-width: 600px) {
+    .student-dashboard {
+        padding: 12px;
+    }
+
+    .dashboard-section {
+        padding: 15px;
+    }
+
+    .dashboard-header {
+        align-items: flex-start;
+    }
+}
+</style>
+
+{% endblock %}
